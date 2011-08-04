@@ -8,23 +8,28 @@ unset HISTFILE
 #################
 
 case "$1" in
+	# Minimises System And Installs Dropbear
 	dropbear)
 		install_basic
 		install_dropbear
 	;;
+	# Installs Extra Packages
 	extra)
 		install_extra
 	;;
+	# Finalizes Install
 	final)
 		configure_defaults
 		configure_misc
 		configure_user
 		configure_final
 	;;
+	# Minimises System And Installs OpenSSH
 	ssh)
 		install_basic
 		install_ssh
 	;;
+	# Shows Help
 	*)
 		echo \>\> You must run this script with options. They are outlined below:
 		echo For a minimal Dropbear based install: sh minimal.sh dropbear
@@ -87,6 +92,7 @@ function configure_user {
 	# Takes User Name Input
 	echo -n Please Choose A User Name:
 	read -e USERNAME
+	# Add User Based On Input
 	useradd $USERNAME
 }
 
