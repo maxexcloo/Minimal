@@ -1,3 +1,7 @@
+To be run on a fresh VPS under root!
+>> DOWNLOAD <<
+wget http://github.com/maxexcloo/Minimal/tarball/master; tar zxvf *.gz
+
 >> INSTRUCTIONS <<
 You must run this script with options. They are outlined below:
 For a minimal Dropbear based install: sh minimal.sh dropbear
