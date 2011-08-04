@@ -1,0 +1,4 @@
+deb http://mirrors.kernel.org/debian/ squeeze main contrib non-free
+deb http://mirrors.kernel.org/debian/ squeeze-updates main contrib non-free
+deb http://security.debian.org/ squeeze/updates main contrib non-free
+deb http://packages.dotdeb.org squeeze all

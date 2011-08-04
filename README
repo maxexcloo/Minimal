@@ -1,0 +1,10 @@
+>> INSTRUCTIONS <<
+You must run this script with options. They are outlined below:
+For a minimal Dropbear based install: sh minimal.sh dropbear
+For a minimal OpenSSH based install: sh minimal.sh ssh
+To install extra packages defined in lists/extra: sh minimal.sh extra
+To set the clock, clean files and create a user: sh minimal.sh final
+
+>> CREDITS <<
+CPAC Script: Dannix @ LowEndTalk (http://v2.lowendtalk.com/users/65/dannix/)
+cedr @ daIRC: General Help
