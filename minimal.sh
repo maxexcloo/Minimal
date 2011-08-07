@@ -3,6 +3,12 @@
 cd $(dirname $0)
 unset HISTFILE
 
+###############
+## Variables ##
+###############
+
+SSHPORT=""
+
 #############################
 ## Configuration Functions ##
 #############################
@@ -22,11 +28,25 @@ function configure_basic {
 		configure_history
 	fi
 
+	# Ask If SSH Port Should Be Changed
+	echo -n "Do you wish to run SSH on different ports? (y/N)"
+	read -e OPTION_SSHPORT
+	if [ "$OPTION_SSHPORT" != "y" ]; then
+		configure_sshport
+	fi
+
+	# Ask If SSH Logins Should Be Rate Limited
+	echo -n "Do you wish to rate limit SSH? (y/N)"
+	read -e OPTION_SSHRATE
+	if [ "$OPTION_SSHRATE" != "y" ]; then
+		configure_sshrate
+	fi
+
 	# Ask If Root SSH Should Be Disabled
 	echo -n "Do you wish to disable root SSH logins? Keep enabled if you don't plan on making any users! (Y/n)"
 	read -e OPTION_SSHROOT
 	if [ "$OPTION_SSHROOT" != "n" ]; then
-		configure_ssh
+		configure_sshroot
 	fi
 
 	# Ask If Time Zone Should Be Set
@@ -91,13 +111,45 @@ function configure_history {
 	echo "unset HISTFILE" >> /etc/profile
 }
 
+# Changes SSH Port To User Specification
+function configure_sshport {
+	# Prints Informational Message
+	echo \>\> Configuring: Changing SSH Ports
+	# Takes User Name Input
+	echo -n "Please enter an additional SSH Port:"
+	read -e SSHPORT
+	# Adds Port
+	sed -i 's/#Port/Port '$SSHPORT'/g' /etc/ssh/sshd_config
+	sed -i 's/DROPBEAR_EXTRA_ARGS="-w/DROPBEAR_EXTRA_ARGS="-w -p '$SSHPORT'/g' /etc/default/dropbear
+}
+
+# Enables SSH Login Rate Limiting
+function configure_sshrate {
+	# Prints Informational Message
+	echo \>\> Configuring: Rate Limiting SSH Logins
+	# Enables SSH Login Rate Limiting
+	iptables -N SSH_CHECK
+	iptables -A INPUT -p tcp --dport 22 -m state --state NEW -j SSH_CHECK
+	if [ "$SSHPORT" != "" ]; then
+		iptables -A INPUT -p tcp --dport $SSHPORT -m state --state NEW -j SSH_CHECK
+	fi
+	iptables -A SSH_CHECK -m recent --set --name SSH
+	iptables -A SSH_CHECK -m recent --update --seconds 60 --hitcount 4 --name SSH -j DROP
+	# Saves Limits
+	iptables-save > /etc/firewall.conf
+	echo "#!/bin/sh" > /etc/network/if-up.d/iptables
+	echo "iptables-restore < /etc/firewall.conf" >> /etc/network/if-up.d/iptables
+	chmod +x /etc/network/if-up.d/iptables
+}
+
 # Enables Root SSH Login
-function configure_ssh {
+function configure_sshroot {
 	# Prints Informational Message
 	echo \>\> Configuring: Enabling Root SSH Login
 	# Enables Root SSH Login
 	sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
-	sed -i 's/110 -w/110/g' /etc/default/dropbear
+	sed -i 's/"-w/"/g' /etc/default/dropbear
+	sed -i 's/" /"/g' /etc/default/dropbear
 }
 
 # Sets Time Zone
