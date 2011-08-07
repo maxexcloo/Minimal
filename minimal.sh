@@ -3,42 +3,6 @@
 cd $(dirname $0)
 unset HISTFILE
 
-#################
-## Init Script ##
-#################
-
-case "$1" in
-	# Minimises System And Installs Dropbear
-	dropbear)
-		install_basic
-		install_dropbear
-	;;
-	# Installs Extra Packages
-	extra)
-		install_extra
-	;;
-	# Finalizes Install
-	final)
-		configure_defaults
-		configure_misc
-		configure_user
-		configure_final
-	;;
-	# Minimises System And Installs OpenSSH
-	ssh)
-		install_basic
-		install_ssh
-	;;
-	# Shows Help
-	*)
-		echo \>\> You must run this script with options. They are outlined below:
-		echo For a minimal Dropbear based install: sh minimal.sh dropbear
-		echo For a minimal OpenSSH based install: sh minimal.sh ssh
-		echo To install extra packages defined in lists/extra: sh minimal.sh extra
-		echo To set the clock, clean files and create a user: sh minimal.sh final
-	;;
-esac
-
 #############################
 ## Configuration Functions ##
 #############################
@@ -217,3 +181,39 @@ function packages_update {
 	# Updates Package Lists
 	apt-get update
 }
+
+#################
+## Init Script ##
+#################
+
+case "$1" in
+	# Minimises System And Installs Dropbear
+	dropbear)
+		install_basic
+		install_dropbear
+	;;
+	# Installs Extra Packages
+	extra)
+		install_extra
+	;;
+	# Finalizes Install
+	final)
+		configure_defaults
+		configure_misc
+		configure_user
+		configure_final
+	;;
+	# Minimises System And Installs OpenSSH
+	ssh)
+		install_basic
+		install_ssh
+	;;
+	# Shows Help
+	*)
+		echo \>\> You must run this script with options. They are outlined below:
+		echo For a minimal Dropbear based install: sh minimal.sh dropbear
+		echo For a minimal OpenSSH based install: sh minimal.sh ssh
+		echo To install extra packages defined in lists/extra: sh minimal.sh extra
+		echo To set the clock, clean files and create a user: sh minimal.sh final
+	;;
+esac
