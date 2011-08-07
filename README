@@ -6,7 +6,7 @@ CPAC Script: Dannix @ LowEndTalk (http://v2.lowendtalk.com/users/65/dannix/)
 cedr @ daIRC: General Help
 
 >> DOWNLOAD <<
-wget http://github.com/maxexcloo/Minimal/tarball/master; tar zxvf *.gz
+wget http://github.com/maxexcloo/Minimal/tarball/master; tar zxvf *.gz; cd *Minimal*; sh minimal.sh
 
 >> INSTRUCTIONS <<
 You must run this script with options. They are outlined below:
