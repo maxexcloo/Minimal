@@ -7,6 +7,46 @@ unset HISTFILE
 ## Configuration Functions ##
 #############################
 
+# Runs Through Configuration Functions
+function configure_basic {
+	# Configure Defaults
+	configure_defaults
+
+	# Remove Useless Gettys
+	configure_getty
+
+	# Ask If BASH History Should Be Disabled
+	echo -n "Do you wish to disable BASH history? (Y/n)"
+	read -e OPTION_HISTORY
+	if [ "$OPTION_HISTORY" != "n" ]; then
+		configure_history
+	fi
+
+	# Ask If Root SSH Should Be Disabled
+	echo -n "Do you wish to disable root SSH logins? Keep enabled if you don't plan on making any users! (Y/n)"
+	read -e OPTION_SSHROOT
+	if [ "$OPTION_SSHROOT" != "n" ]; then
+		configure_ssh
+	fi
+
+	# Ask If Time Zone Should Be Set
+	echo -n "Do you wish to set the timezone? (Y/n)"
+	read -e OPTION_TZ
+	if [ "$OPTION_TZ" != "n" ]; then
+		configure_timezone
+	fi
+
+	# Ask If User Should Be Made
+	echo -n "Do you wish to create a user account? (Y/n)"
+	read -e OPTION_USER
+	if [ "$OPTION_USER" != "n" ]; then
+		configure_user
+	fi
+
+	# Clean Up
+	configure_final
+}
+
 # Overwrites Server Skel Directory With Template Skel Directory
 function configure_defaults {
 	# Prints Informational Message
@@ -36,27 +76,46 @@ function configure_final {
 }
 
 # Configures Miscellaneous Options
-function configure_misc {
+function configure_getty {
 	# Prints Informational Message
-	echo \>\> Configuring: Miscellaneous
-	# Removes Useless Gettys (Not Used AFAIK)
+	echo \>\> Configuring: Gettys
+	# Removes Useless Gettys
 	sed -e 's/\(^[2-6].*getty.*\)/#\1/' -i /etc/inittab
+}
+
+# Disables BASH History
+function configure_history {
+	# Prints Informational Message
+	echo \>\> Configuring: BASH History
 	# Sets Variable To Turn Off Bash History
 	echo "unset HISTFILE" >> /etc/profile
 }
 
-# Sets Time Zone & Adds User Account
-function configure_user {
+# Enables Root SSH Login
+function configure_ssh {
+	# Prints Informational Message
+	echo \>\> Configuring: Enabling Root SSH Login
+	# Enables Root SSH Login
+	sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
+	sed -i 's/110 -w/110/g' /etc/default/dropbear
+}
+
+# Sets Time Zone
+function configure_timezone {
 	# Prints Informational Message
 	echo \>\> Configuring: Time Zone
 	# Shows Option To Set Time Zone
 	dpkg-reconfigure tzdata
+}
+
+# Adds User Account
+function configure_user {
 	# Prints Informational Message
 	echo \>\> Configuring: User Account
 	# Takes User Name Input
-	echo -n Please Choose A User Name:
+	echo -n "Please enter a user name:"
 	read -e USERNAME
-	# Add User Based On Input
+	# Add User
 	useradd $USERNAME
 }
 
@@ -196,12 +255,9 @@ case "$1" in
 	extra)
 		install_extra
 	;;
-	# Finalizes Install
-	final)
-		configure_defaults
-		configure_misc
-		configure_user
-		configure_final
+	# Configures Install
+	configure)
+		configure_basic
 	;;
 	# Minimises System And Installs OpenSSH
 	ssh)
@@ -214,6 +270,6 @@ case "$1" in
 		echo For a minimal Dropbear based install: sh minimal.sh dropbear
 		echo For a minimal OpenSSH based install: sh minimal.sh ssh
 		echo To install extra packages defined in lists/extra: sh minimal.sh extra
-		echo To set the clock, clean files and create a user: sh minimal.sh final
+		echo To set the clock, clean files and create a user: sh minimal.sh configure
 	;;
 esac
