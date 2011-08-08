@@ -22,44 +22,44 @@ function configure_basic {
 	configure_getty
 
 	# Ask If BASH History Should Be Disabled
-	echo -n "Do you wish to disable BASH history? (Y/n)"
+	echo -n "Do you wish to disable BASH history? (Y/n): "
 	read -e OPTION_HISTORY
-	if [ "$(tr [A-Z] [a-z] <<< '$OPTION_HISTORY')" != "n" ]; then
+	if [ "$OPTION_HISTORY" != "n" ]; then
 		configure_history
 	fi
 
 	# Ask If SSH Port Should Be Changed
-	echo -n "Do you wish to run SSH on different ports? (y/N)"
+	echo -n "Do you wish to run SSH on different ports? (y/N): "
 	read -e OPTION_SSHPORT
-	if [ "$(tr [A-Z] [a-z] <<< '$OPTION_SSHPORT')" == "y" ]; then
+	if [ "$OPTION_SSHPORT" == "y" ]; then
 		configure_sshport
 	fi
 
 	# Ask If SSH Logins Should Be Rate Limited
-	echo -n "Do you wish to rate limit SSH? (y/N)"
+	echo -n "Do you wish to rate limit SSH? (y/N): "
 	read -e OPTION_SSHRATE
-	if [ "$(tr [A-Z] [a-z] <<< '$OPTION_SSHRATE')" == "y" ]; then
+	if [ "$OPTION_SSHRATE" == "y" ]; then
 		configure_sshrate
 	fi
 
 	# Ask If Root SSH Should Be Disabled
-	echo -n "Do you wish to disable root SSH logins? Keep enabled if you don't plan on making any users! (Y/n)"
+	echo -n "Do you wish to disable root SSH logins? Keep enabled if you don't plan on making any users! (Y/n): "
 	read -e OPTION_SSHROOT
-	if [ "$(tr [A-Z] [a-z] <<< '$OPTION_SSHROOT')" != "n" ]; then
+	if [ "$OPTION_SSHROOT" != "n" ]; then
 		configure_sshroot
 	fi
 
 	# Ask If Time Zone Should Be Set
-	echo -n "Do you wish to set the timezone? (Y/n)"
+	echo -n "Do you wish to set the timezone? (Y/n): "
 	read -e OPTION_TZ
-	if [ "$(tr [A-Z] [a-z] <<< '$OPTION_TZ')" != "n" ]; then
+	if [ "$OPTION_TZ" != "n" ]; then
 		configure_timezone
 	fi
 
 	# Ask If User Should Be Made
-	echo -n "Do you wish to create a user account? (Y/n)"
+	echo -n "Do you wish to create a user account? (Y/n): "
 	read -e OPTION_USER
-	if [ "$(tr [A-Z] [a-z] <<< '$OPTION_USER')" != "n" ]; then
+	if [ "$OPTION_USER" != "n" ]; then
 		configure_user
 	fi
 
@@ -116,7 +116,7 @@ function configure_sshport {
 	# Prints Informational Message
 	echo \>\> Configuring: Changing SSH Ports
 	# Takes User Name Input
-	echo -n "Please enter an additional SSH Port:"
+	echo -n "Please enter an additional SSH Port: "
 	read -e SSHPORT
 	# Adds Port
 	sed -i 's/#Port/Port '$SSHPORT'/g' /etc/ssh/sshd_config
@@ -165,10 +165,12 @@ function configure_user {
 	# Prints Informational Message
 	echo \>\> Configuring: User Account
 	# Takes User Name Input
-	echo -n "Please enter a user name:"
+	echo -n "Please enter a user name: "
 	read -e USERNAME
 	# Add User
-	useradd $USERNAME
+	useradd -m $USERNAME
+	# Set Password
+	passwd $USERNAME
 }
 
 ############################
