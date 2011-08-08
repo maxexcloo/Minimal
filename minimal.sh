@@ -45,7 +45,7 @@ function configure_basic {
 	# Ask If Root SSH Should Be Disabled
 	echo -n "Do you wish to disable root SSH logins? Keep enabled if you don't plan on making any users! (Y/n): "
 	read -e OPTION_SSHROOT
-	if [ "$OPTION_SSHROOT" != "n" ]; then
+	if [ "$OPTION_SSHROOT" == "y" ]; then
 		configure_sshroot
 	fi
 
@@ -137,7 +137,7 @@ function configure_sshrate {
 	iptables -A SSH_CHECK -m recent --update --seconds 60 --hitcount 4 --name SSH -j DROP
 	# Saves Limits
 	iptables-save > /etc/firewall.conf
-	echo "#!/bin/sh" > /etc/network/if-up.d/iptables
+	echo '#!/bin/sh' > /etc/network/if-up.d/iptables
 	echo "iptables-restore < /etc/firewall.conf" >> /etc/network/if-up.d/iptables
 	chmod +x /etc/network/if-up.d/iptables
 }
