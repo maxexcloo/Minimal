@@ -205,8 +205,8 @@ function install_dropbear {
 function install_extra {
 	# Loops Through Package List
 	while read package; do
-		# Installs Currently Selected Package
-		aptitude install $package
+		# Installs Currently Selected Package (true | fixes a bug caused by input being stdin)
+		true | aptitude install $package
 	done < lists/extra
 	# Cleans Cached Packages
 	aptitude clean
