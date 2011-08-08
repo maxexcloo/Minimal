@@ -1,12 +1,8 @@
 To be run on a fresh VPS under root!
 No warranty. For help come on #Frantech on irc.dairc.net and look for maxexcloo!
 
->> CREDITS <<
-CPAC Script: Dannix @ LowEndTalk (http://v2.lowendtalk.com/users/65/dannix/)
-cedr @ daIRC: General Help
-
 >> DOWNLOAD <<
-wget http://github.com/maxexcloo/Minimal/tarball/master; tar zxvf *.gz; cd *Minimal*; sh minimal.sh
+wget -O master.tar.gz http://github.com/maxexcloo/Minimal/tarball/master; tar zxvf *.gz; cd *Minimal*; sh minimal.sh
 
 >> INSTRUCTIONS <<
 You must run this script with options. They are outlined below:
@@ -14,3 +10,9 @@ For a minimal Dropbear based install: sh minimal.sh dropbear
 For a minimal OpenSSH based install: sh minimal.sh ssh
 To install extra packages defined in lists/extra: sh minimal.sh extra
 To set the clock, clean files and create a user: sh minimal.sh configure
+
+>> CREDITS <<
+cedr @ daIRC: General Help
+CPAC Script: Dannix @ LowEndTalk (http://v2.lowendtalk.com/users/65/dannix/)
+miTgiB @ daIRC: Script Help
+SSH Limiting: http://www.hostingfu.com/article/ssh-dictionary-attack-prevention-with-iptables/
