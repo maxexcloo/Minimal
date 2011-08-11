@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # CREDITS: maxexcloo @ www.excloo.com
 cd $(dirname $0)
 unset HISTFILE

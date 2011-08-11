@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # CREDITS: Dannix @ LowEndTalk (http://v2.lowendtalk.com/users/65/dannix/)
 
 export LANG=C LANGUAGE=C LC_ALL=C
