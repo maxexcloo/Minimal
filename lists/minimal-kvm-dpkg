@@ -10,6 +10,7 @@ bsdutils                                        install
 console-setup                                   install
 console-terminus                                install
 coreutils                                       install
+cpio                                            install
 cron                                            install
 dash                                            install
 debconf                                         install

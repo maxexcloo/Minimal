@@ -8,6 +8,7 @@ bash                                            install
 bsdmainutils                                    install
 bsdutils                                        install
 coreutils                                       install
+cpio                                            install
 cron                                            install
 dash                                            install
 debconf                                         install

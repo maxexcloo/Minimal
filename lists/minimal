@@ -8,6 +8,7 @@ bash
 bsdmainutils
 bsdutils
 coreutils
+cpio
 cron
 dash
 debconf

@@ -10,6 +10,7 @@ bsdutils
 console-setup
 console-terminus
 coreutils
+cpio
 cron
 dash
 debconf
