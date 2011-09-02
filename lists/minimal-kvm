@@ -58,10 +58,12 @@ libc-bin
 libcomerr2
 libcwidget3
 libdb4.8
+libdevmapper1.02.1
 libept1
 libfreetype6
 libgcc1
 libgdbm3
+libklibc
 liblocale-gettext-perl
 liblzma2
 libncurses5
@@ -87,6 +89,7 @@ libtext-wrapi18n-perl
 libudev0
 libusb-0.1-4
 libuuid1
+libuuid-perl
 libwrap0
 libxapian22
 linux-base

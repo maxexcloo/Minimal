@@ -58,10 +58,12 @@ libc-bin                                        install
 libcomerr2                                      install
 libcwidget3                                     install
 libdb4.8                                        install
+libdevmapper1.02.1                              install
 libept1                                         install
 libfreetype6                                    install
 libgcc1                                         install
 libgdbm3                                        install
+libklibc                                        install
 liblocale-gettext-perl                          install
 liblzma2                                        install
 libncurses5                                     install
@@ -87,6 +89,7 @@ libtext-wrapi18n-perl                           install
 libudev0                                        install
 libusb-0.1-4                                    install
 libuuid1                                        install
+libuuid-perl                                    install
 libwrap0                                        install
 libxapian22                                     install
 linux-base                                      install
