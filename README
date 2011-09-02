@@ -1,6 +1,5 @@
 >> NOTES <<
 Run on a fresh VPS under root!
-There's currently a non issue bug on KVM, if the script prompts to remove grub/kernel, say no, the script will continue to work as normal.
 Make sure you don't rely on sudo, you'll get locked out!
 No warranty. For help come on #Frantech on irc.dairc.net and look for maxexcloo!
 
