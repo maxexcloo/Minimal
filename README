@@ -5,7 +5,7 @@ Make sure you don't rely on sudo, you'll get locked out!
 No warranty. For help come on #Frantech on irc.dairc.net and look for maxexcloo!
 
 >> DOWNLOAD <<
-wget --no-check-certificate -O master.tar.gz http://github.com/maxexcloo/Minimal/tarball/master; tar zxvf *.gz; cd *Minimal*; sh minimal.sh
+wget --no-check-certificate -O minimal.tar.gz http://github.com/maxexcloo/Minimal/tarball/master; tar zxvf minimal.gz; cd *Minimal*; sh minimal.sh
 
 >> INSTRUCTIONS <<
 You must run this script with options. They are outlined below:
