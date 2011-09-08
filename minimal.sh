@@ -238,13 +238,13 @@ function packages_dpkg {
 	echo \>\> Updating DPKG
 	# Clear DPKG Package Selections
 	dpkg --clear-selections
-	# Check For OpenVZ Server
+	# Check For ParaVirtualised Server
 	if [ -f /proc/user_beancounters ] || [ -d /proc/bc ]; then
-		# Set OpenVZ Package Selections
-		dpkg --set-selections < lists/minimal-dpkg
+		# Set ParaVirtualised Package Selections
+		dpkg --set-selections < lists/minimal-pv-dpkg
 	else
-		# Set KVM Package Selections
-		dpkg --set-selections < lists/minimal-kvm-dpkg
+		# Set Hardware Package Selections
+		dpkg --set-selections < lists/minimal-hw-dpkg
 	fi
 	# Install/Remove To Make System Match Package List
 	aptitude install
@@ -256,13 +256,13 @@ function packages_dpkg {
 function packages_minimal {
 	# Prints Informational Message
 	echo \>\> Purging Non Minimal Packages
-	# Check For OpenVZ Server
+	# Check For ParaVirtualised Server
 	if [ -f /proc/user_beancounters ] || [ -d /proc/bc ]; then
-		# Copy OpenVZ Package List
-		cp lists/minimal lists/temp
+		# Copy ParaVirtualised Package List
+		cp lists/minimal-pv lists/temp
 	else
-		# Copy KVM Package List
-		cp lists/minimal-kvm lists/temp
+		# Copy Hardware Package List
+		cp lists/minimal-hw lists/temp
 	fi
 	# Run Package Cleaning Script
 	sh cpac.sh

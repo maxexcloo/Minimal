@@ -1,6 +1,7 @@
 >> NOTES <<
 Run on a fresh VPS under root!
-DO NOT run on a Xen server, it's untested and breaks things. If you would like to lend a server for testing please contact me (details below).
+Tested on Debian 32 bit OpenVZ and KVM.
+All other platforms are untested, things may break! If you would like to lend a server for testing please contact me (details below).
 Make sure you don't rely on sudo, you'll get locked out!
 No warranty. For help come on #Frantech on irc.dairc.net and look for maxexcloo!
 
