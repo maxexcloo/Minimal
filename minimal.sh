@@ -44,7 +44,7 @@ function configure_basic {
 	# Ask If Root SSH Should Be Disabled
 	echo -n "Do you wish to disable root SSH logins? Keep enabled if you don't plan on making any users! (Y/n): "
 	read -e OPTION_SSHROOT
-	if [ "$OPTION_SSHROOT" == "y" ]; then
+	if [ "$OPTION_SSHROOT" != "n" ]; then
 		configure_sshroot
 	fi
 
@@ -88,8 +88,6 @@ function configure_final {
 	rm -rf ~/*
 	# Remove Aptitude Cache Directory
 	rm -rf ~/.aptitude
-	# Remove Local SSH Directory
-	rm -rf ~/.ssh
 	# Remove Skel SSH Directory
 	rm -rf /etc/skel/.ssh
 }
