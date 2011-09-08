@@ -1,8 +1,8 @@
 >> NOTES <<
 Run on a fresh VPS under root!
-Tested on Debian 32 bit OpenVZ and KVM.
+Make sure you don't rely on sudo, you'll get locked out as it will be wiped during the cleaning process!
+Tested on Debian 32 bit. Works with KVM, OpenVZ and VMWare Virtual Machines and on Dedicated Servers.
 All other platforms are untested, things may break! If you would like to lend a server for testing please contact me (details below).
-Make sure you don't rely on sudo, you'll get locked out!
 No warranty. For help come on #Frantech on irc.dairc.net and look for maxexcloo!
 
 >> DOWNLOAD <<
