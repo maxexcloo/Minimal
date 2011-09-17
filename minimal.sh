@@ -307,9 +307,9 @@ case "$1" in
 	# Shows Help
 	*)
 		echo \>\> You must run this script with options. They are outlined below:
-		echo For a minimal Dropbear based install: sh minimal.sh dropbear
-		echo For a minimal OpenSSH based install: sh minimal.sh ssh
-		echo To install extra packages defined in lists/extra: sh minimal.sh extra
-		echo To set the clock, clean files and create a user: sh minimal.sh configure
+		echo For a minimal Dropbear based install: bash minimal.sh dropbear
+		echo For a minimal OpenSSH based install: bash minimal.sh ssh
+		echo To install extra packages defined in lists/extra: bash minimal.sh extra
+		echo To set the clock, clean files and create a user: bash minimal.sh configure
 	;;
 esac
