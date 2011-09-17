@@ -183,7 +183,7 @@ function install_extra {
 	# Loops Through Package List
 	while read package; do
 		# Installs Currently Selected Package
-		true | apt-get install $package
+		apt-get -q -y install $package
 	done < lists/extra
 	# Cleans Cached Packages
 	apt-get clean
