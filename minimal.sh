@@ -62,6 +62,9 @@ function configure_basic {
 		configure_user
 	fi
 
+	# Reconfigure Dash
+	dpkg-reconfigure dash
+
 	# Clean Up
 	configure_final
 }
