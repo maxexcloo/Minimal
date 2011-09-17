@@ -1,5 +1,4 @@
 [ -z "$PS1" ] && return
-shopt -s checkwinsize
 
 if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
 	color_prompt=yes
