@@ -1,12 +1,7 @@
 >> NOTES <<
-Run on a fresh VPS under root!
+Run on a freshly installed server under root!
 Make sure you don't rely on sudo, you'll get locked out as it will be wiped during the cleaning process!
-Tested on Debian 32 bit. Works with KVM, OpenVZ and VMWare Virtual Machines and on Dedicated Servers.
-All other platforms are untested, things may break! If you would like to lend a server for testing please contact me (details below).
 No warranty. For help come on #Frantech on irc.dairc.net and look for maxexcloo!
-
->> DOWNLOAD <<
-wget --no-check-certificate -O minimal.tar.gz http://github.com/maxexcloo/Minimal/tarball/master; tar zxvf minimal.tar.gz; cd *Minimal*
 
 >> INSTRUCTIONS <<
 You must run this script with options. They are outlined below:
@@ -15,8 +10,24 @@ For a minimal OpenSSH based install: sh minimal.sh ssh
 To install extra packages defined in lists/extra: sh minimal.sh extra
 To set the clock, clean files and create a user: sh minimal.sh configure
 
+>> DOWNLOAD <<
+wget --no-check-certificate -O mini.tgz http://is.gd/minideb; tar zxvf mini.tgz; cd *Minimal*;
+
+>> COMPATIBILITY <<
+Operating Systems:
+ + Debian 6 (Squeeze) i686
+ + Debian 6 (Squeeze) x86_64
+Platforms:
+ + Physical Hardware
+ + KVM
+ + OpenVZ
+ + VirtualBox
+ + VMWare
+ + Xen HVM
+ + Xen PV
+
 >> CREDITS <<
 cedr @ daIRC: General Help
-CPAC Script: Dannix @ LowEndTalk (http://v2.lowendtalk.com/users/65/dannix/)
+DPKG Cleaning: http://www.coredump.gr/linux/debian-package-list-backup-and-restore/
 miTgiB @ daIRC: Script Help
 SSH Limiting: http://www.hostingfu.com/article/ssh-dictionary-attack-prevention-with-iptables/

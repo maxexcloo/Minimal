@@ -66,9 +66,8 @@ function configure_basic {
 	configure_final
 }
 
-# Overwrites Server Skel Directory With Template Skel Directory
+# Cleans Dotfiles
 function configure_defaults {
-	# Prints Informational Message
 	echo \>\> Configuring: Defaults
 	# Remove Home Dotfiles
 	rm -rf ~/.??*
@@ -80,49 +79,38 @@ function configure_defaults {
 	cp -a -R settings/skel/.??* /etc/skel
 }
 
-# Cleans Home Folder (Removes Script)
+# Cleans Home
 function configure_final {
-	# Prints Informational Message
 	echo \>\> Configuring: Finalizing
 	# Remove All Home Files
 	rm -rf ~/*
-	# Remove Aptitude Cache Directory
-	rm -rf ~/.aptitude
 	# Remove Skel SSH Directory
 	rm -rf /etc/skel/.ssh
 }
 
-# Configures Miscellaneous Options
+# Clean Getty
 function configure_getty {
-	# Prints Informational Message
 	echo \>\> Configuring: Gettys
-	# Removes Useless Gettys
 	sed -e 's/\(^[2-6].*getty.*\)/#\1/' -i /etc/inittab
 }
 
 # Disables BASH History
 function configure_history {
-	# Prints Informational Message
 	echo \>\> Configuring: BASH History
-	# Sets Variable To Turn Off Bash History
 	echo "unset HISTFILE" >> /etc/profile
 }
 
 # Changes SSH Port To User Specification
 function configure_sshport {
-	# Prints Informational Message
 	echo \>\> Configuring: Changing SSH Ports
-	# Takes User Name Input
 	echo -n "Please enter an additional SSH Port: "
 	read -e SSHPORT
-	# Adds Port
 	sed -i 's/#Port/Port '$SSHPORT'/g' /etc/ssh/sshd_config
 	sed -i 's/DROPBEAR_EXTRA_ARGS="-w/DROPBEAR_EXTRA_ARGS="-w -p '$SSHPORT'/g' /etc/default/dropbear
 }
 
 # Enables SSH Login Rate Limiting
 function configure_sshrate {
-	# Prints Informational Message
 	echo \>\> Configuring: Rate Limiting SSH Logins
 	# Enables SSH Login Rate Limiting
 	iptables -N SSH_CHECK
@@ -141,9 +129,7 @@ function configure_sshrate {
 
 # Enables Root SSH Login
 function configure_sshroot {
-	# Prints Informational Message
 	echo \>\> Configuring: Enabling Root SSH Login
-	# Enables Root SSH Login
 	sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
 	sed -i 's/"-w/"/g' /etc/default/dropbear
 	sed -i 's/" /"/g' /etc/default/dropbear
@@ -151,22 +137,16 @@ function configure_sshroot {
 
 # Sets Time Zone
 function configure_timezone {
-	# Prints Informational Message
 	echo \>\> Configuring: Time Zone
-	# Shows Option To Set Time Zone
 	dpkg-reconfigure tzdata
 }
 
 # Adds User Account
 function configure_user {
-	# Prints Informational Message
 	echo \>\> Configuring: User Account
-	# Takes User Name Input
 	echo -n "Please enter a user name: "
 	read -e USERNAME
-	# Add User
 	useradd -m $USERNAME
-	# Set Password
 	passwd $USERNAME
 }
 
@@ -174,22 +154,20 @@ function configure_user {
 ## Installation Functions ##
 ############################
 
-# Runs Through Install Functions
+# Executes Install Functions
 function install_basic {
-	# Run Functions In Order
 	packages_update
 	packages_purge
-	packages_minimal
-	packages_dpkg
+	packages_create
+	packages_clean
 	packages_purge
 }
 
 # Installs Lightweight Dropbear SSH Server & OpenSSH For SFTP Support
 function install_dropbear {
-	# Prints Informational Message
 	echo \>\> Configuring Dropbear
 	# Installs Dropbear
-	aptitude install dropbear
+	apt-get install dropbear
 	# Updates Configuration Files
 	cp settings/dropbear /etc/default/dropbear
 	# Installs OpenSSH For SFTP Support
@@ -204,19 +182,18 @@ function install_dropbear {
 function install_extra {
 	# Loops Through Package List
 	while read package; do
-		# Installs Currently Selected Package (true | fixes a bug caused by input being stdin)
-		true | aptitude install $package
+		# Installs Currently Selected Package
+		true | apt-get install $package
 	done < lists/extra
 	# Cleans Cached Packages
-	aptitude clean
+	apt-get clean
 }
 
 # Installs OpenSSH And Sets Configuration
 function install_ssh {
-	# Prints Informational Message
 	echo \>\> Configuring SSH
 	# Installs OpenSSH
-	aptitude install openssh-server
+	apt-get install openssh-server
 	# Updates Configuration Files
 	cp settings/sshd /etc/ssh/sshd_config
 	cp settings/ssh /etc/ssh/ssh_config
@@ -230,59 +207,71 @@ function install_ssh {
 ## Package Functions ##
 #######################
 
-# Uses DPKG To Remove Packages The Minimal Script Has Missed
-function packages_dpkg {
-	# Prints Informational Message
-	echo \>\> Updating DPKG
+# Uses DPKG To Remove Packages
+function packages_clean {
+	echo \>\> Cleaning Packages
 	# Clear DPKG Package Selections
 	dpkg --clear-selections
-	# Check For ParaVirtualised Server
-	if [ -f /proc/user_beancounters ] || [ -d /proc/bc ]; then
-		# Set ParaVirtualised Package Selections
-		dpkg --set-selections < lists/minimal-pv-dpkg
-	else
-		# Set Hardware Package Selections
-		dpkg --set-selections < lists/minimal-hw-dpkg
-	fi
-	# Install/Remove To Make System Match Package List
-	aptitude install
+	# Set Package Selections
+	dpkg --set-selections < lists/temp
+	# Get Selections And Set To Purge
+	dpkg --get-selections | sed -e 's/deinstall/purge/' > /tmp/dpkg
+	# Set Package Selections
+	dpkg --set-selections < /tmp/dpkg
+	# Update DPKG
+	apt-get dselect-upgrade
 	# Upgrade Any Outdated Packages
-	aptitude upgrade
+	apt-get upgrade
 }
 
-# Uses A Bash Script To Purge Unneeded Packages And Settings
-function packages_minimal {
-	# Prints Informational Message
-	echo \>\> Purging Non Minimal Packages
-	# Check For ParaVirtualised Server
+# Creates Package List
+function packages_create {
+	echo \>\> Creating Package List
+	# Copy Base Package List
+	cp lists/base lists/temp
+	# OpenVZ Check
 	if [ -f /proc/user_beancounters ] || [ -d /proc/bc ]; then
-		# Copy ParaVirtualised Package List
-		cp lists/minimal-pv lists/temp
+		echo Detected OpenVZ!
+	# Physical Hardware/Hardware Virtualisation
 	else
-		# Copy Hardware Package List
-		cp lists/minimal-hw lists/temp
+		# Copy Base Package List
+		cat lists/base-hw >> lists/temp
+		# Detect x86
+		if [ $(uname -m) == "i686" ]; then
+			echo Detected i686!
+			cat lists/kernel-i686 >> lists/temp
+		fi
+		# Detect x86_64
+		if [ $(uname -m) == "x86_64" ]; then
+			echo Detected x86_64!
+			cat lists/kernel-x86_64 >> lists/temp
+		fi
+		# Detect XEN PV x86
+		if [[ $(uname -r) == *xen* ]] && [ $(uname -m) == "i686" ]; then
+			echo Detected XEN PV i686!
+			cat lists/kernel-xen-i686 >> lists/temp
+		fi
+		# Detect XEN PV x86_64
+		if [[ $(uname -r) == *xen* ]] && [ $(uname -m) == "x86_64" ]; then
+			echo Detected XEN PV x86_64!
+			cat lists/kernel-xen-x86_64 >> lists/temp
+		fi
 	fi
-	# Run Package Cleaning Script
-	sh cpac.sh
-	# Upgrade Any Outdated Packages
-	aptitude upgrade
+	# Sort Package List
+	sort -o lists/temp lists/temp
 }
 
-# Purges APT/Aptitude Package Lists & Old Packages
+# Purges APT Package Lists
 function packages_purge {
-	# Prints Informational Message
 	echo \>\> Cleaning Package States
 	# Empty Package List Files
 	echo -n > /var/lib/apt/extended_states
-	echo -n > /var/lib/aptitude/pkgstates
-	echo -n > /var/lib/aptitude/pkgstates.old
 	# Cleans Cached Packages
-	aptitude clean
+	apt-get clean
 }
 
 # Updates Sources List & APT
 function packages_update {
-	# Prints Informational Message
 	echo \>\> Setting Up APT Sources
 	# Copies Sources
 	cp settings/sources /etc/apt/sources.list
