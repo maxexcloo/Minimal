@@ -252,13 +252,11 @@ function packages_create {
 		# Detect XEN PV x86
 		if [[ $(uname -r) == *xen* ]] && [ $(uname -m) == "i686" ]; then
 			echo Detected XEN PV i686!
-			cat lists/kernel-i686 >> lists/temp
 			cat lists/kernel-xen-i686 >> lists/temp
 		fi
 		# Detect XEN PV x86_64
 		if [[ $(uname -r) == *xen* ]] && [ $(uname -m) == "x86_64" ]; then
 			echo Detected XEN PV x86_64!
-			cat lists/kernel-x86_64 >> lists/temp
 			cat lists/kernel-xen-x86_64 >> lists/temp
 		fi
 	fi
