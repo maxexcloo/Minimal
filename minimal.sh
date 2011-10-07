@@ -44,7 +44,7 @@ function configure_basic {
 	# Ask If Root SSH Should Be Disabled
 	echo -n "Do you wish to disable root SSH logins? Keep enabled if you don't plan on making any users! (Y/n): "
 	read -e OPTION_SSHROOT
-	if [ "$OPTION_SSHROOT" != "n" ]; then
+	if [ "$OPTION_SSHROOT" == "n" ]; then
 		configure_sshroot
 	fi
 
