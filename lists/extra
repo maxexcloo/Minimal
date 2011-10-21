@@ -1,3 +1,6 @@
+axel
+bwm-ng
+curl
 htop
 psmisc
 rar
@@ -6,5 +9,4 @@ rsync
 screen
 unrar
 unzip
-whois
 zip
