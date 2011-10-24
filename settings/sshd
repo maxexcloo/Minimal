@@ -9,6 +9,6 @@ Protocol 2
 Subsystem sftp /usr/lib/openssh/sftp-server
 
 ChallengeResponseAuthentication no
-PermitRootLogin no
+PermitRootLogin yes
 UsePAM yes
 UsePrivilegeSeparation yes

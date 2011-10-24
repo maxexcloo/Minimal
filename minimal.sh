@@ -44,7 +44,7 @@ function configure_basic {
 	# Ask If Root SSH Should Be Disabled
 	echo -n "Do you wish to disable root SSH logins? Keep enabled if you don't plan on making any users! (Y/n): "
 	read -e OPTION_SSHROOT
-	if [ "$OPTION_SSHROOT" == "n" ]; then
+	if [ "$OPTION_SSHROOT" != "n" ]; then
 		configure_sshroot
 	fi
 
@@ -80,6 +80,8 @@ function configure_defaults {
 	cp -a -R settings/skel/.??* ~
 	# Update Skel Dotfiles
 	cp -a -R settings/skel/.??* /etc/skel
+	# Append Umask
+	echo -e "\numask o=" >> /etc/skel/.bashrc
 }
 
 # Cleans Home
@@ -132,10 +134,9 @@ function configure_sshrate {
 
 # Enables Root SSH Login
 function configure_sshroot {
-	echo \>\> Configuring: Enabling Root SSH Login
-	sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config
-	sed -i 's/"-w/"/g' /etc/default/dropbear
-	sed -i 's/" /"/g' /etc/default/dropbear
+	echo \>\> Configuring: Disabling Root SSH Login
+	sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+	sed -i 's/DROPBEAR_EXTRA_ARGS="/DROPBEAR_EXTRA_ARGS="-w/g' /etc/default/dropbear
 }
 
 # Sets Time Zone
