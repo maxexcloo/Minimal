@@ -3,6 +3,7 @@ bwm-ng
 curl
 htop
 psmisc
+python
 rar
 rsnapshot
 rsync
