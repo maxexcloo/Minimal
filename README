@@ -7,7 +7,7 @@ No warranty. For help come on #Frantech on irc.dairc.net and look for maxexcloo!
 You must run this script with options. They are outlined below:
 For a minimal Dropbear based install: bash minimal.sh dropbear
 For a minimal OpenSSH based install: bash minimal.sh ssh
-To install extra packages defined in lists/extra: bash minimal.sh extra
+To install extra packages defined in extra: bash minimal.sh extra
 To set the clock, clean files and create a user: bash minimal.sh configure
 
 >> DOWNLOAD <<
