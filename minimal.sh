@@ -6,7 +6,6 @@ cd $(dirname $0)
 ###############
 
 unset HISTFILE
-SSHPORT=""
 
 #############################
 ## Configuration Functions ##
@@ -23,42 +22,42 @@ function configure_basic {
 	# Ask If BASH History Should Be Disabled
 	echo -n "Do you wish to disable BASH history? (Y/n): "
 	read -e OPTION_HISTORY
-	if [ "$OPTION_HISTORY" != "n" ]; then
+	if [ "$OPTION_HISTORY" != "n" ] || [ "$OPTION_HISTORY" != "N" ]; then
 		configure_history
+	fi
+
+	# Ask If Logging Should Be Simplified
+	echo -n "Simplify logging configuration? (Y/n): "
+	read -e OPTION_LOGGING
+	if [ "$OPTION_LOGGING" != "n" ] || [ "$OPTION_LOGGING" != "N" ]; then
+		configure_logging
 	fi
 
 	# Ask If SSH Port Should Be Changed
 	echo -n "Do you wish to run SSH on different ports? (y/N): "
 	read -e OPTION_SSHPORT
-	if [ "$OPTION_SSHPORT" == "y" ]; then
+	if [ "$OPTION_SSHPORT" == "y" ] || [ "$OPTION_HISTORY" == "Y" ]; then
 		configure_sshport
-	fi
-
-	# Ask If SSH Logins Should Be Rate Limited
-	echo -n "Do you wish to rate limit SSH? (y/N): "
-	read -e OPTION_SSHRATE
-	if [ "$OPTION_SSHRATE" == "y" ]; then
-		configure_sshrate
 	fi
 
 	# Ask If Root SSH Should Be Disabled
 	echo -n "Do you wish to disable root SSH logins? Keep enabled if you don't plan on making any users! (Y/n): "
 	read -e OPTION_SSHROOT
-	if [ "$OPTION_SSHROOT" != "n" ]; then
+	if [ "$OPTION_SSHROOT" != "n" ] || [ "$OPTION_HISTORY" != "N" ]; then
 		configure_sshroot
 	fi
 
 	# Ask If Time Zone Should Be Set
 	echo -n "Do you wish to set the timezone? (Y/n): "
 	read -e OPTION_TZ
-	if [ "$OPTION_TZ" != "n" ]; then
+	if [ "$OPTION_TZ" != "n" ] || [ "$OPTION_HISTORY" != "N" ]; then
 		configure_timezone
 	fi
 
 	# Ask If User Should Be Made
 	echo -n "Do you wish to create a user account? (Y/n): "
 	read -e OPTION_USER
-	if [ "$OPTION_USER" != "n" ]; then
+	if [ "$OPTION_USER" != "n" ] || [ "$OPTION_HISTORY" != "N" ]; then
 		configure_user
 	fi
 
@@ -89,8 +88,6 @@ function configure_final {
 	echo \>\> Configuring: Finalizing
 	# Remove All Home Files
 	rm -rf ~/*
-	# Remove Skel SSH Directory
-	rm -rf /etc/skel/.ssh
 }
 
 # Clean Getty
@@ -102,7 +99,18 @@ function configure_getty {
 # Disables BASH History
 function configure_history {
 	echo \>\> Configuring: BASH History
-	echo "unset HISTFILE" >> /etc/profile
+	echo -e "\nunset HISTFILE" >> /etc/profile
+}
+
+# Simplifies Logging
+function configure_history {
+	echo \>\> Configuring: Simplified Logging
+	/etc/init.d/inetutils-syslogd stop
+	rm /var/log/* /var/log/*/*
+	rm -rf /var/log/news
+	cp settings/syslog /etc/syslog.conf
+	cp settings/logrotate /etc/logrotate.d/inetutils-syslogd
+	/etc/init.d/inetutils-syslogd start
 }
 
 # Changes SSH Port To User Specification
@@ -112,24 +120,6 @@ function configure_sshport {
 	read -e SSHPORT
 	sed -i 's/#Port/Port '$SSHPORT'/g' /etc/ssh/sshd_config
 	sed -i 's/DROPBEAR_EXTRA_ARGS="-w/DROPBEAR_EXTRA_ARGS="-w -p '$SSHPORT'/g' /etc/default/dropbear
-}
-
-# Enables SSH Login Rate Limiting
-function configure_sshrate {
-	echo \>\> Configuring: Rate Limiting SSH Logins
-	# Enables SSH Login Rate Limiting
-	iptables -N SSH_CHECK
-	iptables -A INPUT -p tcp --dport 22 -m state --state NEW -j SSH_CHECK
-	if [ "$SSHPORT" != "" ]; then
-		iptables -A INPUT -p tcp --dport $SSHPORT -m state --state NEW -j SSH_CHECK
-	fi
-	iptables -A SSH_CHECK -m recent --set --name SSH
-	iptables -A SSH_CHECK -m recent --update --seconds 60 --hitcount 4 --name SSH -j DROP
-	# Saves Limits
-	iptables-save > /etc/firewall.conf
-	echo '#!/bin/sh' > /etc/network/if-up.d/iptables
-	echo "iptables-restore < /etc/firewall.conf" >> /etc/network/if-up.d/iptables
-	chmod +x /etc/network/if-up.d/iptables
 }
 
 # Enables Root SSH Login
@@ -150,7 +140,7 @@ function configure_user {
 	echo \>\> Configuring: User Account
 	echo -n "Please enter a user name: "
 	read -e USERNAME
-	useradd -m $USERNAME
+	useradd -m -s /bin/bash $USERNAME
 	passwd $USERNAME
 }
 
@@ -188,7 +178,7 @@ function install_extra {
 	while read package; do
 		# Installs Currently Selected Package
 		apt-get -q -y install $package
-	done < lists/extra
+	done < extra
 	# Cleans Cached Packages
 	apt-get clean
 }
