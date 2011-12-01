@@ -22,42 +22,42 @@ function configure_basic {
 	# Ask If BASH History Should Be Disabled
 	echo -n "Do you wish to disable BASH history? (Y/n): "
 	read -e OPTION_HISTORY
-	if [ "$OPTION_HISTORY" != "n" ] || [ "$OPTION_HISTORY" != "N" ]; then
+	if [ "$OPTION_HISTORY" != "n" ]; then
 		configure_history
 	fi
 
 	# Ask If Logging Should Be Simplified
 	echo -n "Simplify logging configuration? (Y/n): "
 	read -e OPTION_LOGGING
-	if [ "$OPTION_LOGGING" != "n" ] || [ "$OPTION_LOGGING" != "N" ]; then
+	if [ "$OPTION_LOGGING" != "n" ]; then
 		configure_logging
 	fi
 
 	# Ask If SSH Port Should Be Changed
 	echo -n "Do you wish to run SSH on different ports? (y/N): "
 	read -e OPTION_SSHPORT
-	if [ "$OPTION_SSHPORT" == "y" ] || [ "$OPTION_HISTORY" == "Y" ]; then
+	if [ "$OPTION_SSHPORT" == "y" ]; then
 		configure_sshport
 	fi
 
 	# Ask If Root SSH Should Be Disabled
 	echo -n "Do you wish to disable root SSH logins? Keep enabled if you don't plan on making any users! (Y/n): "
 	read -e OPTION_SSHROOT
-	if [ "$OPTION_SSHROOT" != "n" ] || [ "$OPTION_HISTORY" != "N" ]; then
+	if [ "$OPTION_SSHROOT" != "n" ]; then
 		configure_sshroot
 	fi
 
 	# Ask If Time Zone Should Be Set
 	echo -n "Do you wish to set the timezone? (Y/n): "
 	read -e OPTION_TZ
-	if [ "$OPTION_TZ" != "n" ] || [ "$OPTION_HISTORY" != "N" ]; then
+	if [ "$OPTION_TZ" != "n" ]; then
 		configure_timezone
 	fi
 
 	# Ask If User Should Be Made
 	echo -n "Do you wish to create a user account? (Y/n): "
 	read -e OPTION_USER
-	if [ "$OPTION_USER" != "n" ] || [ "$OPTION_HISTORY" != "N" ]; then
+	if [ "$OPTION_USER" != "n" ]; then
 		configure_user
 	fi
 
