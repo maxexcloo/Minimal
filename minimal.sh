@@ -103,11 +103,12 @@ function configure_history {
 }
 
 # Simplifies Logging
-function configure_history {
+function configure_logging {
 	echo \>\> Configuring: Simplified Logging
 	/etc/init.d/inetutils-syslogd stop
 	rm /var/log/* /var/log/*/*
 	rm -rf /var/log/news
+	touch /var/log/{auth,daemon,kernel,mail,messages}
 	cp settings/syslog /etc/syslog.conf
 	cp settings/logrotate /etc/logrotate.d/inetutils-syslogd
 	/etc/init.d/inetutils-syslogd start
