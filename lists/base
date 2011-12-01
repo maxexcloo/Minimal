@@ -44,6 +44,7 @@ libgcc1                                         install
 liblzma2                                        install
 libncurses5                                     install
 libncursesw5                                    install
+libnewt0.52                                     install
 libnfnetlink0                                   install
 libpam0g                                        install
 libpam-modules                                  install
@@ -82,5 +83,6 @@ traceroute                                      install
 tzdata                                          install
 util-linux                                      install
 wget                                            install
+whiptail                                        install
 xz-utils                                        install
 zlib1g                                          install
