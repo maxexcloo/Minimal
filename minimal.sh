@@ -5,6 +5,7 @@ cd $(dirname $0)
 ## Variables ##
 ###############
 
+# Disables BASH History For Session
 unset HISTFILE
 
 #############################
@@ -22,42 +23,54 @@ function configure_basic {
 	# Ask If BASH History Should Be Disabled
 	echo -n "Do you wish to disable BASH history? (Y/n): "
 	read -e OPTION_HISTORY
+	# Checks User Input
 	if [ "$OPTION_HISTORY" != "n" ]; then
+		# Executes Function
 		configure_history
 	fi
 
 	# Ask If Logging Should Be Simplified
 	echo -n "Simplify logging configuration? (Y/n): "
 	read -e OPTION_LOGGING
+	# Checks User Input
 	if [ "$OPTION_LOGGING" != "n" ]; then
+		# Executes Function
 		configure_logging
 	fi
 
 	# Ask If SSH Port Should Be Changed
 	echo -n "Do you wish to run SSH on different ports? (y/N): "
 	read -e OPTION_SSHPORT
+	# Checks User Input
 	if [ "$OPTION_SSHPORT" == "y" ]; then
+		# Executes Function
 		configure_sshport
 	fi
 
 	# Ask If Root SSH Should Be Disabled
 	echo -n "Do you wish to disable root SSH logins? Keep enabled if you don't plan on making any users! (Y/n): "
 	read -e OPTION_SSHROOT
+	# Checks User Input
 	if [ "$OPTION_SSHROOT" != "n" ]; then
+		# Executes Function
 		configure_sshroot
 	fi
 
 	# Ask If Time Zone Should Be Set
 	echo -n "Do you wish to set the timezone? (Y/n): "
 	read -e OPTION_TZ
+	# Checks User Input
 	if [ "$OPTION_TZ" != "n" ]; then
+		# Executes Function
 		configure_timezone
 	fi
 
 	# Ask If User Should Be Made
 	echo -n "Do you wish to create a user account? (Y/n): "
 	read -e OPTION_USER
+	# Checks User Input
 	if [ "$OPTION_USER" != "n" ]; then
+		# Executes Function
 		configure_user
 	fi
 
@@ -93,55 +106,72 @@ function configure_final {
 # Clean Getty
 function configure_getty {
 	echo \>\> Configuring: Gettys
+	# Removes Unneeded Getty Instances
 	sed -e 's/\(^[2-6].*getty.*\)/#\1/' -i /etc/inittab
 }
 
 # Disables BASH History
 function configure_history {
 	echo \>\> Configuring: BASH History
+	# Disables System BASH History
 	echo -e "\nunset HISTFILE" >> /etc/profile
 }
 
 # Simplifies Logging
 function configure_logging {
 	echo \>\> Configuring: Simplified Logging
+	# Stops Logging Daemon
 	/etc/init.d/inetutils-syslogd stop
+	# Removes Log Files
 	rm /var/log/* /var/log/*/*
 	rm -rf /var/log/news
+	# Creates New Log Files
 	touch /var/log/{auth,daemon,kernel,mail,messages}
+	# Copies Simplified Logging Configuration
 	cp settings/syslog /etc/syslog.conf
+	# Copies Simplified Log Rotation Configuration
 	cp settings/logrotate /etc/logrotate.d/inetutils-syslogd
+	# Starts Logging Daemon
 	/etc/init.d/inetutils-syslogd start
 }
 
 # Changes SSH Port To User Specification
 function configure_sshport {
 	echo \>\> Configuring: Changing SSH Ports
+	# Takes User Input
 	echo -n "Please enter an additional SSH Port: "
 	read -e SSHPORT
+	# Adds Extra SSH Port To OpenSSH
 	sed -i 's/#Port/Port '$SSHPORT'/g' /etc/ssh/sshd_config
+	# Adds Extra SSH Port To Dropbear
 	sed -i 's/DROPBEAR_EXTRA_ARGS="-w/DROPBEAR_EXTRA_ARGS="-w -p '$SSHPORT'/g' /etc/default/dropbear
 }
 
 # Enables Root SSH Login
 function configure_sshroot {
 	echo \>\> Configuring: Disabling Root SSH Login
+	# Disables Root SSH Login For OpenSSH
 	sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+	# Disables Root SSH Login For Dropbear
 	sed -i 's/DROPBEAR_EXTRA_ARGS="/DROPBEAR_EXTRA_ARGS="-w/g' /etc/default/dropbear
 }
 
 # Sets Time Zone
 function configure_timezone {
 	echo \>\> Configuring: Time Zone
+	# Configures Time Zone
 	dpkg-reconfigure tzdata
 }
 
 # Adds User Account
 function configure_user {
 	echo \>\> Configuring: User Account
+	# Takes User Input
 	echo -n "Please enter a user name: "
 	read -e USERNAME
+	# Adds User Based On Input
 	useradd -m -s /bin/bash $USERNAME
+	# Sets Password For Newly Added User
 	passwd $USERNAME
 }
 
@@ -189,7 +219,7 @@ function install_ssh {
 	echo \>\> Configuring SSH
 	# Installs OpenSSH
 	apt-get install openssh-server
-	# Updates Configuration Files
+	# Copies SSH Configuration Files
 	cp settings/sshd /etc/ssh/sshd_config
 	cp settings/ssh /etc/ssh/ssh_config
 	# Restarts OpenSSH Daemon
@@ -234,21 +264,25 @@ function packages_create {
 		# Detect x86
 		if [ $(uname -m) == "i686" ]; then
 			echo Detected i686!
+			# Append Platform Relevent Packages To Package List
 			cat lists/kernel-i686 >> lists/temp
 		fi
 		# Detect x86_64
 		if [ $(uname -m) == "x86_64" ]; then
 			echo Detected x86_64!
+			# Append Platform Relevent Packages To Package List
 			cat lists/kernel-x86_64 >> lists/temp
 		fi
 		# Detect XEN PV x86
 		if [[ $(uname -r) == *xen* ]] && [ $(uname -m) == "i686" ]; then
 			echo Detected XEN PV i686!
+			# Append Platform Relevent Packages To Package List
 			cat lists/kernel-xen-i686 >> lists/temp
 		fi
 		# Detect XEN PV x86_64
 		if [[ $(uname -r) == *xen* ]] && [ $(uname -m) == "x86_64" ]; then
 			echo Detected XEN PV x86_64!
+			# Append Platform Relevent Packages To Package List
 			cat lists/kernel-xen-x86_64 >> lists/temp
 		fi
 	fi
@@ -304,7 +338,7 @@ case "$1" in
 		echo \>\> You must run this script with options. They are outlined below:
 		echo For a minimal Dropbear based install: bash minimal.sh dropbear
 		echo For a minimal OpenSSH based install: bash minimal.sh ssh
-		echo To install extra packages defined in lists/extra: bash minimal.sh extra
+		echo To install extra packages defined in the extra file: bash minimal.sh extra
 		echo To set the clock, clean files and create a user: bash minimal.sh configure
 	;;
 esac

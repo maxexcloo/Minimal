@@ -1,30 +1,27 @@
 >> NOTES <<
 Run on a freshly installed server under root!
 Make sure you don't rely on sudo, you'll get locked out as it will be wiped during the cleaning process!
-No warranty. For help come on #Frantech on irc.dairc.net and look for maxexcloo!
+No warranty. For help come on #frantech on irc.dairc.net and look for maxexcloo!
 
 >> INSTRUCTIONS <<
 You must run this script with options. They are outlined below:
 For a minimal Dropbear based install: bash minimal.sh dropbear
 For a minimal OpenSSH based install: bash minimal.sh ssh
-To install extra packages defined in extra: bash minimal.sh extra
+To install extra packages defined in the extra file: bash minimal.sh extra
 To set the clock, clean files and create a user: bash minimal.sh configure
-
->> DOWNLOAD <<
-wget --no-check-certificate -O mini.tgz http://is.gd/minideb; tar zxvf mini.tgz; cd *Minimal*;
 
 >> COMPATIBILITY <<
 Operating Systems:
  + Debian 6 (Squeeze) i686
  + Debian 6 (Squeeze) x86_64
+
 Platforms:
  + Physical Hardware
  + KVM
  + OpenVZ
  + VirtualBox
  + VMWare
- + Xen HVM
- + Xen PV
+ + Xen
 
 >> CREDITS <<
 cedr @ daIRC: General Help
