@@ -4,6 +4,9 @@ Make sure you don't rely on sudo, you'll get locked out as it will be wiped duri
 No warranty. For help come on #frantech on irc.dairc.net and look for maxexcloo!
 
 >> INSTRUCTIONS <<
+Download the script with the following command:
+cd ~; wget --no-check-certificate -O mini.tgz http://www.github.com/maxexcloo/Minimal/tarball/master; tar zxvf mini.tgz; cd *Minimal*
+
 You must run this script with options. They are outlined below:
 For a minimal Dropbear based install: bash minimal.sh dropbear
 For a minimal OpenSSH based install: bash minimal.sh ssh
