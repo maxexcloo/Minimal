@@ -9,17 +9,14 @@ Instructions
 
 Download the script with the following command:
 
-`cd ~; wget --no-check-certificate -O minimal.tar.gz http://www.github.com/maxexcloo/Minimal/tarball/master; tar zxvf minimal.tar.gz; cd *Minimal*`
+	cd ~; wget --no-check-certificate -O minimal.tar.gz http://www.github.com/maxexcloo/Minimal/tarball/master; tar zxvf minimal.tar.gz; cd *Minimal*
 
 You must run this script with options. They are outlined below:
 
-For a minimal Dropbear based install: `bash minimal.sh dropbear`
-
-For a minimal OpenSSH based install: `bash minimal.sh ssh`
-
-To install extra packages defined in the extra file: `bash minimal.sh extra`
-
-To set the clock, clean files and create a user: `bash minimal.sh configure`
+ + For a minimal Dropbear based install: `bash minimal.sh dropbear`
+ + For a minimal OpenSSH based install: `bash minimal.sh ssh`
+ + To install extra packages defined in the extra file: `bash minimal.sh extra`
+ + To set the clock, clean files and create a user: `bash minimal.sh configure`
 
 Compatibility
 =============
