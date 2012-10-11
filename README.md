@@ -1,9 +1,8 @@
 Notes
 =====
 
-Run on a freshly installed server under root!
-
-Make sure you don't rely on sudo, you'll get locked out as it will be wiped during the cleaning process!
+ + Run on a freshly installed server under root!
+ + Make sure you don't rely on sudo, you'll get locked out as it will be wiped during the cleaning process!
 
 Compatibility
 =============
